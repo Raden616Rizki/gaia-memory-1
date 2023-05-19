@@ -1,5 +1,7 @@
 const cards = document.querySelectorAll('.card');
 
+let menu = "gems";
+
 let matchedCard = 0;
 let cardOne, cardTwo;
 let disableDeck = false;
@@ -117,11 +119,17 @@ function shuffleCard() {
     cards.forEach((card, index) => {
         card.classList.remove('flip');
         let imgTag = card.querySelector("img");
-        imgTag.src = `../static/images/img-${arr[index]}.png`;
+        imgTag.src = `../static/images/${menu}/img-${arr[index]}.png`;
         card.addEventListener('click', flipCard);
     });
 }
 
+// Change menu value
+function changeMenu(theme) {
+    menu = theme;
+    // console.log(menu);
+    shuffleCard();
+}
 
 // Timer
 let startTime;

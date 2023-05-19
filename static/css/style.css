@@ -154,8 +154,18 @@ table {
     margin: 8px;
 }
 
-th {
+#header-menu {
+    background: #32317f;
+    color: white;
+}
+
+#header-username {
     background: #6563ff;
+    color: white;
+}
+
+#header-leaderboard {
+    background: #4f4dc5;
     color: white;
 }
 
@@ -163,4 +173,18 @@ th, td {
     padding: 8px;
     border-style: outset;
     border-radius: 8px;
+    cursor: pointer;
+}
+
+#image-menu {
+    height: 48px;
+    width: 48px;
+}
+
+#table-menu td {
+    background: #f8f8f8;
+}
+
+#menu-text {
+    width: 270px;
 }
