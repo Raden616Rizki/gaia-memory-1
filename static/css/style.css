@@ -184,6 +184,10 @@ th, td {
     background: #f8f8f8;
 }
 
+#table-menu td:hover {
+    background: #848484;
+}
+
 #menu-text {
     width: 270px;
 }
