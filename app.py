@@ -3,7 +3,6 @@ from flask import Flask, render_template, jsonify, request
 import os
 from os.path import join, dirname
 from pymongo import MongoClient
-from datetime import datetime
 from dotenv import load_dotenv
 
 dotenv_path = join(dirname(__file__), '.env')
