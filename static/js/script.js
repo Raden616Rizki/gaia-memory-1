@@ -15,6 +15,11 @@ const match = new Audio("../../static/music/matched-card.mp3");
 const notMatch = new Audio("../../static/music/not-matched-card.wav");
 const complete = new Audio("../../static/music/complete-game.wav");
 
+$(document).ready(function() {
+    // console.log('start');
+    showMenu();
+});
+
 function flipCard(e) {
     // play music
     music.play();
@@ -130,6 +135,97 @@ function changeMenu(theme) {
     // console.log(menu);
     shuffleCard();
 }
+
+function openForm() {
+    $('#form-add').css('display', 'block');
+    $('.add').css('display', 'none');
+    $('.close').css('display', 'block');
+}
+
+function closeForm() {
+    $('#form-add').css('display', 'none');
+    $('.add').css('display', 'block');
+    $('.close').css('display', 'none');
+}
+
+function addCard() {
+    let title = $('#title').val();
+    let files = $('#images').prop('files');
+
+    console.log(title);
+    console.log(files);
+
+    if (!title) {
+        return alert('Title is Required!!!');
+    }
+
+    if (files.length < 8) {
+        return alert('Images are Required!!!, Need 8 Images');
+    } else if (files.length > 8) {
+        return alert('Images are full!!!, Just Need 8 Images');
+    }
+
+    let form_data = new FormData();
+    form_data.append('title', title);
+
+    for (let i = 1; i <= files.length; i++) {
+        form_data.append(`img-${i}`, files[i-1]);
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/add-card',
+        data: form_data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            window.location.reload();
+            alert(response.message);
+        }
+    });
+}
+
+function showMenu() {
+    $.ajax({
+        type: 'GET',
+        url: '/show-menu',
+        data: {},
+        success: function (response) {
+            let menu = response['menu'];
+            // console.log(menu[0]['title']);
+            // console.log(menu.title);
+
+            for (let i = 0; i < menu.length; i++) {
+                let title = menu[i]['title'];
+
+                let temp_html = `
+                <tr onclick="changeMenu('${title}')">
+                    <td><img src="../static/images/${title}/img-1.png"  id="image-menu"></td>
+                    <td id="menu-text">${title}</td>
+                </tr>
+                `;
+
+                $('#table-menu').append(temp_html);
+            }
+        }
+    });
+}
+
+function getSelectedImages() {
+    var imageInput = document.getElementById('imageInput');
+    var selectedImages = imageInput.files;
+  
+    // Melakukan iterasi pada setiap file yang dipilih
+    for (var i = 0; i < selectedImages.length; i++) {
+      var file = selectedImages[i];
+      
+      // Mengakses informasi file
+      console.log('Nama File:', file.name);
+      console.log('Tipe File:', file.type);
+      console.log('Ukuran File:', file.size, 'byte');
+      console.log('Terakhir Diubah:', file.lastModifiedDate);
+    }
+  }
 
 // Timer
 let startTime;

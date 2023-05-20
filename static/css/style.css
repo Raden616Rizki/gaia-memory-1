@@ -6,11 +6,52 @@
     font-family: 'Poppins', sans-serif;
 }
 
+.add {
+    width: 32px;
+    height: 32px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    margin: 8px 148px 8px;
+}
+
+.add:hover {
+    box-shadow: 0 3px 8px rgb(0, 0, 0, 0.8);
+}
+
+.add span {
+    font-size: 32px;
+    margin-right: 6px;
+    color: #4d4d4d;
+}
+
 body {
     align-items: center;
     justify-content: center;
     min-height: 80vh;
     background: rgb(44, 44, 44);
+}
+
+.close {
+    width: 32px;
+    height: 32px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    margin: 8px 148px 8px;
+    display: none;
+}
+
+.close:hover {
+    box-shadow: 0 3px 8px rgb(0, 0, 0, 0.8);
+}
+
+.close span {
+    font-size: 32px;
+    margin-right: 6px;
+    color: #4d4d4d;
 }
 
 .wrapper {
@@ -27,6 +68,9 @@ body {
     padding: 25px;
     background: #9f9f9f;
     border-radius: 10px;
+    overflow: auto;
+    align-items: center;
+    justify-self: center;
 }
 
 .left-border {
@@ -35,6 +79,7 @@ body {
     padding: 25px;
     background: #4d4d4d;
     border-radius: 10px;
+    overflow: auto;
 }
 
 .detail {
@@ -186,8 +231,35 @@ th, td {
 
 #table-menu td:hover {
     background: #848484;
+    color: white;
 }
 
 #menu-text {
     width: 270px;
+}
+
+#form-add {
+    padding: 8px;
+    border-style: outset;
+    border-radius: 8px;
+    background: rgb(189, 188, 188);
+    border-style: outset;
+    display: none;
+}
+
+#form-add input{
+    margin: 4px;
+    padding: 2px;;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+#form-add button {
+    margin: 4px 128px 4px;
+    padding: 4px;
+    border-radius: 8px;
+    background: #32317f;
+    color: white;
+    font-weight: bold;
 }
