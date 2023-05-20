@@ -134,6 +134,8 @@ function shuffleCard() {
 function changeMenu(theme) {
     menu = theme;
     // console.log(menu);
+    shuffleCard();
+    resetTimer();
 }
 
 function openForm() {

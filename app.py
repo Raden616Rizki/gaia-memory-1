@@ -5,6 +5,10 @@ from os.path import join, dirname
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
+import random
+
+from datetime import datetime
+
 from http import cookies
 
 cookie = cookies.SimpleCookie()
@@ -58,11 +62,16 @@ def show_menu():
 @app.route('/set-cookies', methods=['POST'])
 def set_cookies():
     username = request.form.get('username')
+    found = checkUsername(username)
+    print(found)
+
+    if (found):
+        return jsonify({'message': f'Sorry :( {username} Already used'})
     # print(username)
     cookie['username'] = username
     # print(cookie['username'])
     
-    return jsonify({'message': f'Welcome {username}'})
+    return jsonify({'message': f'Welcome {username}, The Username lasts about 1 hour, "do you dare to start over?"'})
 
 @app.route('/get-cookies', methods=['GET'])
 def get_cookies():
@@ -74,7 +83,19 @@ def get_cookies():
         cookie['username']['expires'] = 3600;
         cookie['username']['httponly'] = True;
     except:
-        username = "unknown"
+        username = get_username()
+        # cookie['username'] = username
+        # print(username)    
+    
+    today = datetime.now()
+    this_time = today.strftime('%Y/%m/%d|%H:%M:%S')
+    
+    doc = {
+        'username': username,
+        'time_created': this_time,
+    }
+    
+    db.username.insert_one(doc)
     
     cookies = {
         'username': username,
@@ -82,6 +103,40 @@ def get_cookies():
     
     # print(cookies)
     return jsonify({'cookies': cookies})
+
+def get_username():
+    animal_list = ['anoa', 'bekantan', 'cicak', 'dugong', 'elang', 'flaktivus', 'gajah', 'harimau', 'iguana', 'jaguar', 'kalong', 'merak', 'nyambek', 'orangutan', 'penyu', 'quda', 'rusa', 'sriti', 'tuna', 'vinguin', 'walrus', 'xigung', 'yuyu', 'zebra']
+    
+    word_list = ['bersin', 'berdasi', 'cantik', 'cengeng', 'galau', 'jomblo', 'ketawa', 'lompat', 'lari', 'nangis', 'panik', 'pingsan', 'qlilipan', 'rindu', 'solutip', 'setia', 'skiding', 'terbang', 'uzur', 'xixi', 'nyantai', 'woles']
+    
+    animal = random.choice(animal_list)
+    word = random.choice(word_list)
+    number = random.randint(0, 16)
+    
+    username = animal + '_' + word + '_' + str(number)
+    found = checkUsername(username)
+    # print(found)
+    if(found):
+        get_username()
+    
+    return username
+
+def checkUsername(username):
+    usernames = list(db.username.find({}, {'_id': False, 'time_created': False}))
+    # found = any(username in username.values() for username in usernames)
+    
+    # if found:
+    #     return found
+    # else:
+    #     return found
+    
+    # print(usernames)
+    for user in usernames:
+        # print(username, user['username'])
+        if (username == user['username']):
+            return True
+        
+    return False
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
