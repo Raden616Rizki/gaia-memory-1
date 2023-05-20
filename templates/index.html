@@ -26,7 +26,18 @@
     <table>
         <tr>
             <th id="header-menu">Menu</th>
-            <th id="header-username">Username</th>
+            <th id="header-username">
+                <div id="username-column">
+                    <input type="text" id="username" placeholder="username">
+                    <span class="material-icons" onclick="saveUsername()">
+                        save
+                    </span>
+                    <span class="material-icons" onclick="closeUsername()">
+                        close
+                    </span>
+                </div>
+                <h4 id="edit-username" onclick="editUsername()">unknown</h4>
+            </th>
             <th id="header-leaderboard">Leaderboard</th>
         </tr>
         <tr>
@@ -252,7 +263,7 @@
                 <div class="detail">
                     <div class="record">
                         <div>Time : 
-                            <strong id="time">0s</strong>
+                            <strong id="time">0</strong>
                         </div>
                         <span class="material-icons">
                             arrow_back_ios

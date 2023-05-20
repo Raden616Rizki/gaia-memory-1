@@ -263,3 +263,35 @@ th, td {
     color: white;
     font-weight: bold;
 }
+
+#header-username span {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 2px;
+    width: 24px;
+    height: 24px;
+}
+
+#header-username span:hover {
+    font-size: 20.5px;
+    box-shadow: 0 3px 8px rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+#username {
+    font-size: 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    width: 128px;
+}
+
+#username-column {
+    display: none;
+    margin-left: 132px;
+}
+
+#header-username h4:hover {
+    color: black;
+    cursor: pointer;
+}

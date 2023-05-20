@@ -18,6 +18,7 @@ const complete = new Audio("../../static/music/complete-game.wav");
 $(document).ready(function() {
     // console.log('start');
     showMenu();
+    showUsername();
 });
 
 function flipCard(e) {
@@ -133,7 +134,6 @@ function shuffleCard() {
 function changeMenu(theme) {
     menu = theme;
     // console.log(menu);
-    shuffleCard();
 }
 
 function openForm() {
@@ -152,8 +152,8 @@ function addCard() {
     let title = $('#title').val();
     let files = $('#images').prop('files');
 
-    console.log(title);
-    console.log(files);
+    // console.log(title);
+    // console.log(files);
 
     if (!title) {
         return alert('Title is Required!!!');
@@ -211,21 +211,79 @@ function showMenu() {
     });
 }
 
-function getSelectedImages() {
-    var imageInput = document.getElementById('imageInput');
-    var selectedImages = imageInput.files;
-  
-    // Melakukan iterasi pada setiap file yang dipilih
-    for (var i = 0; i < selectedImages.length; i++) {
-      var file = selectedImages[i];
-      
-      // Mengakses informasi file
-      console.log('Nama File:', file.name);
-      console.log('Tipe File:', file.type);
-      console.log('Ukuran File:', file.size, 'byte');
-      console.log('Terakhir Diubah:', file.lastModifiedDate);
+function editUsername() {
+    $('#username-column').css('display', 'flex');
+    $('#edit-username').css('display', 'none');
+}
+
+function closeUsername() {
+    $('#username-column').css('display', 'none');
+    $('#edit-username').css('display', 'block');
+}
+
+function saveUsername() {
+    var user = $('#username').val();
+
+    // console.log(username);
+
+    if (!user) {
+        return alert('Username is Required!!!');
     }
-  }
+
+    let form_data = new FormData();
+    form_data.append('username', user);
+
+    $.ajax({
+        type: 'POST',
+        url: '/set-cookies',
+        data: form_data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            window.location.reload();
+            alert(response.message);
+        }
+    });
+}
+
+function showUsername() {
+    // let user;
+    $.ajax({
+        type: 'GET',
+        url: '/get-cookies',
+        data: {},
+        success: function (response) {
+            let cookies = response['cookies'];
+            // console.log(cookies);
+            let usernamePlayer = cookies['username'];
+            // console.log(usernamePlayer);
+            var username = usernamePlayer;
+            // console.log(username);
+            document.getElementById("edit-username").textContent = username;
+        }
+    });
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('GET', '/get-cookies', true);
+
+    // xhr.onload = function() {
+    //     if (xhr.status === 200) {
+    //         userName = JSON.parse(xhr.responseText)['cookies']['username'];
+    //         // console.log(userName);
+    //         document.getElementById("edit-username").textContent = userName;
+    //     }
+    // }
+    // xhr.send();
+    // fetch('/get-cookies')
+    // .then(response => response.json())
+    // .then(data => {
+    //     user = data['cookies']['username']
+    //     console.log(user);
+    // })
+    // .catch(error => {
+    //     console.error('404 not found');
+    // });
+    // console.log(user);
+}
 
 // Timer
 let startTime;
