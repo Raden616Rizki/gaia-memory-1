@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 import random
 
-import pytz
+#import pytz
 from datetime import datetime
 
 from http import cookies

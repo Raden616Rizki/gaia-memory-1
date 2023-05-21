@@ -239,6 +239,7 @@ function saveUsername() {
 
     let form_data = new FormData();
     form_data.append('username', user);
+    closeUsername()
 
     $.ajax({
         type: 'POST',
