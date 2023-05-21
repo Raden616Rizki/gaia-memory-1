@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 import random
 
+import pytz
 from datetime import datetime
 
 from http import cookies
@@ -63,12 +64,13 @@ def show_menu():
 def set_cookies():
     username = request.form.get('username')
     found = checkUsername(username)
-    print(found)
+    # print(found)
 
     if (found):
         return jsonify({'message': f'Sorry :( {username} Already used'})
     # print(username)
     cookie['username'] = username
+    cookie['user-details'] = get_user()
     # print(cookie['username'])
     
     return jsonify({'message': f'Welcome {username}, The Username lasts about 1 hour, "do you dare to start over?"'})
@@ -85,18 +87,29 @@ def get_cookies():
     except:
         username = get_username()
         cookie['username'] = username
+        cookie['user-details'] = get_user()
         # print(username)    
     
     today = datetime.now()
     this_time = today.strftime('%Y/%m/%d|%H:%M:%S')
     
+    # get user details every device
+    user = cookie['user-details'].output(header='Set-Cookie')
+    cookie.load(user)
+    user1 = cookie['user-details'].value
+    user2 = get_user()
+    
+    if not cek_user(user1, user2):
+        username = get_username()
+        cookie['username'] = username
+        
     doc = {
         'username': username,
         'time_created': this_time,
     }
     
     db.username.insert_one(doc)
-    
+        
     cookies = {
         'username': username,
     }
@@ -166,6 +179,15 @@ def checkUsername(username):
             return True
         
     return False
+
+def get_user():
+    user_agent = request.headers.get('User-Agent')
+    ip_address = request.remote_addr
+    user_value = f'{user_agent}:{ip_address}'
+    return user_value
+
+def cek_user(user_1, user_2):
+    return user_1 == user_2
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
