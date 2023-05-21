@@ -14,6 +14,7 @@ const music = document.getElementById('bg-music');
 const match = new Audio("../../static/music/matched-card.mp3");
 const notMatch = new Audio("../../static/music/not-matched-card.wav");
 const complete = new Audio("../../static/music/complete-game.wav");
+const chatSound = new Audio("../../static/music/chat.mp3")
 
 $(document).ready(function() {
     // console.log('start');
@@ -70,6 +71,7 @@ function matchCards(img1, img2) {
 
             // Stop time
             stopTimer();
+            music.pause();
         }
 
         cardOne.removeEventListener('click', flipCard);
@@ -102,6 +104,7 @@ function matchCards(img1, img2) {
 }
 
 function refreshGame() {
+    music.pause();
     setTimeout(() => {
         return shuffleCard();
     }, 500);
@@ -182,7 +185,8 @@ function addCard() {
         contentType: false,
         processData: false,
         success: function (response) {
-            window.location.reload();
+            // window.location.reload();
+            showMenu();
             alert(response.message);
         }
     });
@@ -243,7 +247,8 @@ function saveUsername() {
         contentType: false,
         processData: false,
         success: function (response) {
-            window.location.reload();
+            // window.location.reload();
+            showUsername();
             alert(response.message);
         }
     });
@@ -322,6 +327,7 @@ function sendChat() {
         processData: false,
         success: function (response) {
             // window.location.reload();
+            chatSound.play();
             showChat();
         }
     });
