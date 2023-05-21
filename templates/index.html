@@ -19,7 +19,7 @@
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 </head>
 <body>
-    <audio id="bg-music" autoplay loop allow="autoplay">
+    <audio id="bg-music" loop>
         <source src="../static/music/background-music.mp3" type="audio/mp3">
     </audio>
 
@@ -75,6 +75,11 @@
                     <div class="close" onclick="closeForm()">
                         <span class="material-icons">
                             close
+                        </span>
+                    </div>
+                    <div class="credit">
+                        <span class="moving-text">
+                            <b>...Credit:</b> All Content The default image and content are obtained from <b><i>https://www.flaticon.com/</i></b> and <b><i>https://fonts.google.com/</i></b>, visit to get various interesting works from everyone...
                         </span>
                     </div>
                 </div>
@@ -256,7 +261,33 @@
             </td>
         </tr>
         <tr>
-            <td></td>
+            {# Chat Global #}
+            <td>
+                <div class="chat-space">
+                    <ul class="chat">
+                        <li>
+                            <p><b>> testoater1</b> <i>2023-05-20 23:12:01</i></p>
+                            <span class="chat-content">
+                                Welcome to Gaia Memory 1   
+                            </span>
+                        </li>
+                    </ul>
+                    <div id="form-chat">
+                        <input type="text" class="chat-content" id="chat">
+                        <button type="submit" onclick="sendChat()">send</button>
+                    </div>
+                    <div class="new-chat" id="close-form-chat" onclick="closeChat()">
+                        <span class="material-icons">
+                            close
+                        </span>
+                    </div>
+                    <div class="new-chat" onclick="startChat()">
+                        <span class="material-icons">
+                            add_comment
+                        </span>
+                    </div>
+                </div>
+            </td>
 
             {# Detail Game #}
             <td>

@@ -19,6 +19,7 @@ $(document).ready(function() {
     // console.log('start');
     showMenu();
     showUsername();
+    showChat();
 });
 
 function flipCard(e) {
@@ -285,6 +286,83 @@ function showUsername() {
     //     console.error('404 not found');
     // });
     // console.log(user);
+}
+
+function startChat() {
+    $('.new-chat').css('display', 'none');
+    $('#form-chat').css('display', 'block');
+    $('#close-form-chat').css('display', 'block');
+}
+
+function closeChat() {
+    $('.new-chat').css('display', 'block');
+    $('#form-chat').css('display', 'none');
+    $('#close-form-chat').css('display', 'none');
+}
+
+function sendChat() {
+    var chat = $('#chat').val();
+
+    if (!chat) {
+        alert("Do you have keyboard?");
+        return;
+    }
+
+    closeChat();
+
+    // console.log(chat);
+    let form_data = new FormData();
+    form_data.append('chat', chat);
+
+    $.ajax({
+        type: 'POST',
+        url: '/send-chat',
+        data: form_data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            // window.location.reload();
+            showChat();
+        }
+    });
+}
+
+function showChat() {
+    $.ajax({
+        type: 'GET',
+        url: '/get-chat',
+        data: {},
+        success: function (response) {
+            let chat = response['chat'];
+            // console.log(chat);
+
+            for (let i = 0; i < chat.length; i++) {
+                let sender = chat[i]['sender'];
+                let time = chat[i]['time'];
+                let chatContent = chat[i]['chat'];
+
+                let temp_html = `
+                    <li>
+                        <p><b>> ${sender}</b> <i>${time}</i></p>
+                        <span class="chat-content">
+                            ${chatContent} 
+                        </span>
+                    </li>
+                `;
+
+                var ct = $('.chat')
+                ct.append(temp_html);
+                scrollToBottom();
+            }
+        }
+    });
+}
+
+function scrollToBottom() {
+    var chat = $('.chat-space');
+    var list = $('.chat');
+
+    chat.scrollTop(list.height());
 }
 
 // Timer

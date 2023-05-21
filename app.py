@@ -84,7 +84,7 @@ def get_cookies():
         cookie['username']['httponly'] = True;
     except:
         username = get_username()
-        # cookie['username'] = username
+        cookie['username'] = username
         # print(username)    
     
     today = datetime.now()
@@ -103,6 +103,35 @@ def get_cookies():
     
     # print(cookies)
     return jsonify({'cookies': cookies})
+
+@app.route('/send-chat', methods=['POST'])
+def send_chat():
+    username = cookie['username'].output(header='Set-Cookie')
+    cookie.load(username)
+    sender = cookie['username'].value
+    
+    today = datetime.now()
+    this_time = today.strftime('%Y-%m-%d %H:%M:%S')
+    time = this_time
+    
+    chat = request.form.get('chat')
+    
+    # print(sender, this_time, chat)
+    
+    doc = {
+        'sender': sender,
+        'time': time,
+        'chat': chat,
+    }
+    
+    db.chat.insert_one(doc)
+    
+    return jsonify({'message': 'success send chat'})
+
+@app.route('/get-chat', methods=['GET'])
+def get_chat():
+    chat = list(db.chat.find({}, {'_id': False}))
+    return jsonify({'chat': chat})
 
 def get_username():
     animal_list = ['anoa', 'bekantan', 'cicak', 'dugong', 'elang', 'flaktivus', 'gajah', 'harimau', 'iguana', 'jaguar', 'kalong', 'merak', 'nyambek', 'orangutan', 'penyu', 'quda', 'rusa', 'sriti', 'tuna', 'vinguin', 'walrus', 'xigung', 'yuyu', 'zebra']

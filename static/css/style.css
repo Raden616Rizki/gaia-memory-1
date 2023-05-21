@@ -295,3 +295,103 @@ th, td {
     color: black;
     cursor: pointer;
 }
+
+.credit {
+    width: 100%;
+    overflow: hidden;
+    height: 32px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    border-style: inset;
+}
+
+.moving-text {
+    display: inline-block;
+    white-space: nowrap;
+    animation: moveText 24s linear infinite;
+}
+
+@keyframes moveText {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.chat-space {
+    height: 60px;
+    width: 400px;
+    border-radius: 4px;
+    overflow: auto;
+}
+
+.chat p {
+    color: white;
+    font-size: 10px;
+    margin-left: 6px;
+}
+
+.chat b {
+    font-size: 12px;
+}
+
+.chat span {
+    display: block;
+    border-radius: 0px 4px 4px 4px;
+    color: black;
+    background: white;
+    border-style: outset;
+    font-size: 12px;
+    padding: 2px;
+    margin-left: 13px;
+    margin-right: 8px;
+}
+
+.new-chat span {
+    color: white;
+    background-color: rgb(62, 62, 62);
+    font-size: 24px;
+    margin-left: 170px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.new-chat span:hover {
+    color: rgb(62, 62, 62);
+    background-color: white;
+}
+
+#form-chat input {
+    margin-left: 13px;
+    width: 317px;
+}
+
+.chat-space button {
+    border-radius: 8px;
+    padding: 1px 2px 1px 2px;
+    background: #32317f;
+    color: white;
+}
+
+.chat-space button:hover {
+    background: white;
+    color: #32317f;
+    font-weight: bold;
+}
+
+.chat-content {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+#form-chat {
+    display: none;
+}
+
+#close-form-chat {
+    margin-top: 4px;
+    display: none;
+}
