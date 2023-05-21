@@ -106,6 +106,8 @@ def get_cookies():
     doc = {
         'username': username,
         'time_created': this_time,
+        'user1': user1,
+        'user2': user2,
     }
     
     db.username.insert_one(doc)
