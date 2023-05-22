@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 
 import random
 
-#import pytz
+# from pytz import timezone, utc
+# # import requests
+# import ipapi
 from datetime import datetime
 
 from http import cookies
@@ -126,6 +128,16 @@ def send_chat():
     sender = cookie['username'].value
     
     today = datetime.now()
+    # client_ip = request.remote_addr
+    # url = f'http://ip-api.com/json/{client_ip}'
+    # response = requests.get(url)
+    # data = response.json()
+    # location = ipapi.location(ip=client_ip)
+    
+    # timezone_str = location['timezone']
+    # server_time = datetime.now(utc)
+    # client_time = server_time.astimezone(timezone(timezone_str))
+    
     this_time = today.strftime('%Y-%m-%d %H:%M:%S')
     time = this_time
     
@@ -185,7 +197,8 @@ def checkUsername(username):
 def get_user():
     user_agent = request.headers.get('User-Agent')
     ip_address = request.remote_addr
-    user_value = f'{user_agent}:{ip_address}'
+    mac_address = request.headers.get('X-Forwarded-For')
+    user_value = f'{user_agent}:{ip_address}:{mac_address}'
     return user_value
 
 def cek_user(user_1, user_2):
