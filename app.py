@@ -161,8 +161,25 @@ def new_chat():
     with db.chat.watch() as stream:
         for change in stream:
             # print('Dokumen baru ditambahkan:')
-            # print(change['fullDocument'])
-            new_chat = change['fullDocument']
+            # print(change['fullDocument']['sender'])
+            # print(type(change['fullDocument']))
+            # new_chat = list(change['fullDocument'])
+            sender = change['fullDocument']['sender']
+            time = change['fullDocument']['time']
+            chat = change['fullDocument']['chat']
+            id_chat = change['fullDocument']['_id']
+            id_chat_cookie = get_cookies_value('id_chat')
+            
+            if (cek_id_chat(id_chat, id_chat_cookie)):
+                return
+                
+            cookie['id_chat'] = id_chat
+            
+            new_chat = {
+                'sender': sender,
+                'time': time,
+                'chat': chat,
+            }
             return jsonify({'new_chat': new_chat})
 
 def get_username():
@@ -214,6 +231,9 @@ def get_cookies_value(key):
 
 def cek_user(user_1, user_2):
     return user_1 == user_2
+
+def cek_id_chat(id_chat, id_chat_cookie):
+    return id_chat == id_chat_cookie
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

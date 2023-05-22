@@ -22,9 +22,9 @@ $(document).ready(function() {
     showUsername();
     // scrollToBottom();
     showChat();
-    setInterval(function() {
-        recieveChat();
-    }, 2000);
+    // setInterval(function() {
+        receiveChat();
+    // }, 2000);
     // setInterval(function() {
     //     showChat();
     // }, 2000);
@@ -340,7 +340,8 @@ function sendChat() {
         processData: false,
         success: function (response) {
             // window.location.reload();
-            showChat();
+            // showChat();
+            receiveChat();
             chatSound.play();
             scrollToBottom();
         }
@@ -371,15 +372,11 @@ function showChat() {
                 let sender = chat[i]['sender'];
                 let time = chat[i]['time'];
                 let chatContent = chat[i]['chat'];
-                // console.log(userNow == sender)
-                if (userNow == sender) {
-                    $('.chat span').css({
-                        'border-radius': '4px 0px 4px 4px'
-                    });
+                // console.log(userNow, sender)
+                if (userNow != sender) {
+                    $('.chat span').css('border-radius', '4px 0px 4px 4px');
                 } else {
-                    $('.chat span').css({
-                        'border-radius': '0px 4px 4px 4px'
-                    });
+                    $('.chat span').css('border-radius', '0px 4px 4px 4px');
                 }
 
                 addNewChat(sender, time, chatContent);
@@ -389,13 +386,14 @@ function showChat() {
     });
 }
 
-function recieveChat() {
+function receiveChat() {
     $.ajax({
         type: 'GET',
         url: '/new-chat',
         data: {},
         success: function (response) {
             var new_chat = response['new_chat'];
+            // console.log(new_chat);
             if (new_chat) {
                 var sender = new_chat['sender']
                 var time = new_chat['time'];
