@@ -21,6 +21,8 @@ $(document).ready(function() {
     showMenu();
     showUsername();
     showChat();
+    refreshContent();
+    setInterval(refreshContent, 1000);
 });
 
 function flipCard(e) {
@@ -328,7 +330,6 @@ function sendChat() {
         processData: false,
         success: function (response) {
             // window.location.reload();
-            chatSound.play();
             showChat();
         }
     });
@@ -344,6 +345,10 @@ function showChat() {
             // console.log(chat);
 
             for (let i = 0; i < chat.length; i++) {
+                if (i == chat.length - 1) {
+                    chatSound.play();
+                }
+
                 let sender = chat[i]['sender'];
                 let time = chat[i]['time'];
                 let chatContent = chat[i]['chat'];
