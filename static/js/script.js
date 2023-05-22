@@ -20,9 +20,11 @@ $(document).ready(function() {
     // console.log('start');
     showMenu();
     showUsername();
-    showChat();
-    refreshContent();
-    setInterval(refreshContent, 1000);
+    setInterval(function() {
+        showChat();
+    }, 2000); //
+    // refreshContent();
+    // setInterval(refreshContent, 1000);
 });
 
 function flipCard(e) {
