@@ -4,6 +4,7 @@ import os
 from os.path import join, dirname
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from pymongo.cursor import CursorType
 
 import random
 
@@ -80,9 +81,7 @@ def set_cookies():
 @app.route('/get-cookies', methods=['GET'])
 def get_cookies():
     try:
-        username = cookie['username'].output(header='Set-Cookie')
-        cookie.load(username)
-        username = cookie['username'].value
+        username = get_cookies_value('username')
         # print(username)
         cookie['username']['expires'] = 3600;
         cookie['username']['httponly'] = True;
@@ -96,9 +95,7 @@ def get_cookies():
     this_time = today.strftime('%Y/%m/%d|%H:%M:%S')
     
     # get user details every device
-    user = cookie['user-details'].output(header='Set-Cookie')
-    cookie.load(user)
-    user1 = cookie['user-details'].value
+    user1 = get_cookies_value('user-details')
     user2 = get_user()
     
     if not cek_user(user1, user2):
@@ -123,9 +120,7 @@ def get_cookies():
 
 @app.route('/send-chat', methods=['POST'])
 def send_chat():
-    username = cookie['username'].output(header='Set-Cookie')
-    cookie.load(username)
-    sender = cookie['username'].value
+    sender = get_cookies_value('username')
     
     today = datetime.now()
     # client_ip = request.remote_addr
@@ -158,7 +153,17 @@ def send_chat():
 @app.route('/get-chat', methods=['GET'])
 def get_chat():
     chat = list(db.chat.find({}, {'_id': False}))
-    return jsonify({'chat': chat})
+    user_now = get_cookies_value('username')
+    return jsonify({'chat': chat, 'user_now': user_now})
+
+@app.route('/new-chat', methods=['GET'])
+def new_chat():
+    with db.chat.watch() as stream:
+        for change in stream:
+            # print('Dokumen baru ditambahkan:')
+            # print(change['fullDocument'])
+            new_chat = change['fullDocument']
+            return jsonify({'new_chat': new_chat})
 
 def get_username():
     animal_list = ['anoa', 'bekantan', 'cicak', 'dugong', 'elang', 'flaktivus', 'gajah', 'harimau', 'iguana', 'jaguar', 'kalong', 'merak', 'nyambek', 'orangutan', 'penyu', 'quda', 'rusa', 'sriti', 'tuna', 'vinguin', 'walrus', 'xigung', 'yuyu', 'zebra']
@@ -200,6 +205,12 @@ def get_user():
     mac_address = request.headers.get('X-Forwarded-For')
     user_value = f'{user_agent}:{ip_address}:{mac_address}'
     return user_value
+
+def get_cookies_value(key):
+    key_value = cookie[key].output(header='Set-Cookie')
+    cookie.load(key_value)
+    final_value = cookie[key].value
+    return final_value
 
 def cek_user(user_1, user_2):
     return user_1 == user_2

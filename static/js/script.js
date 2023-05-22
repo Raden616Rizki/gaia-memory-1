@@ -20,9 +20,17 @@ $(document).ready(function() {
     // console.log('start');
     showMenu();
     showUsername();
+    // scrollToBottom();
+    showChat();
     setInterval(function() {
-        showChat();
-    }, 2000); //
+        recieveChat();
+    }, 2000);
+    // setInterval(function() {
+    //     showChat();
+    // }, 2000);
+    // for (var i = 0; i < 2; i++) {
+    //     showChat();
+    // }
     // refreshContent();
     // setInterval(refreshContent, 1000);
 });
@@ -333,6 +341,8 @@ function sendChat() {
         success: function (response) {
             // window.location.reload();
             showChat();
+            chatSound.play();
+            scrollToBottom();
         }
     });
 }
@@ -344,32 +354,69 @@ function showChat() {
         data: {},
         success: function (response) {
             let chat = response['chat'];
+            let userNow = response['user_now'];
             // console.log(chat);
+            const default_html = `
+            <li>
+                <p><b>> testoater1</b> <i>2023-05-20 23:12:01</i></p>
+                <span class="chat-content">
+                    Welcome to Gaia Memory 1   
+                </span>
+            </li>
+            `;
+            $('.chat').html(default_html);
 
             for (let i = 0; i < chat.length; i++) {
-                if (i == chat.length - 1) {
-                    chatSound.play();
-                }
 
                 let sender = chat[i]['sender'];
                 let time = chat[i]['time'];
                 let chatContent = chat[i]['chat'];
+                // console.log(userNow == sender)
+                if (userNow == sender) {
+                    $('.chat span').css({
+                        'border-radius': '4px 0px 4px 4px'
+                    });
+                } else {
+                    $('.chat span').css({
+                        'border-radius': '0px 4px 4px 4px'
+                    });
+                }
 
-                let temp_html = `
-                    <li>
-                        <p><b>> ${sender}</b> <i>${time}</i></p>
-                        <span class="chat-content">
-                            ${chatContent} 
-                        </span>
-                    </li>
-                `;
+                addNewChat(sender, time, chatContent);
+            }
+            scrollToBottom();
+        }
+    });
+}
 
-                var ct = $('.chat')
-                ct.append(temp_html);
-                scrollToBottom();
+function recieveChat() {
+    $.ajax({
+        type: 'GET',
+        url: '/new-chat',
+        data: {},
+        success: function (response) {
+            var new_chat = response['new_chat'];
+            if (new_chat) {
+                var sender = new_chat['sender']
+                var time = new_chat['time'];
+                var chatContent = new_chat['chat'];
+                addNewChat(sender, time, chatContent);
             }
         }
     });
+}
+
+function addNewChat(sender, time, chatContent) {
+    let temp_html = `
+        <li>
+            <p><b>> ${sender}</b> <i>${time}</i></p>
+            <span class="chat-content">
+                ${chatContent} 
+            </span>
+        </li>
+    `;
+
+    $('.chat').append(temp_html);
 }
 
 function scrollToBottom() {
