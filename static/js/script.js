@@ -24,7 +24,7 @@ $(document).ready(function() {
     showChat();
     setInterval(function() {
         receiveChat();
-    }, 18000);
+    }, 20000);
     // setInterval(function() {
     //     showChat();
     // }, 2000);
@@ -341,7 +341,7 @@ function sendChat() {
         success: function (response) {
             // window.location.reload();
             // showChat();
-            receiveChat();
+            showChat();
             chatSound.play();
             scrollToBottom();
         }

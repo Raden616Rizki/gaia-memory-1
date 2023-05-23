@@ -73,6 +73,8 @@ def set_cookies():
         return jsonify({'message': f'Sorry :( {username} Already used'})
     # print(username)
     cookie['username'] = username
+    cookie['username']['expires'] = 3600;
+    cookie['username']['httponly'] = True;
     cookie['user-details'] = get_user()
     # print(cookie['username'])
     
@@ -81,32 +83,38 @@ def set_cookies():
 @app.route('/get-cookies', methods=['GET'])
 def get_cookies():
     try:
+        # key_value = cookie['username'].output(header='Set-Cookie')
+        # cookie.load(key_value)
+        # username = cookie['username'].value
         username = get_cookies_value('username')
-        # print(username)
-        cookie['username']['expires'] = 3600;
-        cookie['username']['httponly'] = True;
+        # print('try : ', username)
     except:
         username = get_username()
-        cookie['username'] = username
         cookie['user-details'] = get_user()
-        # print(username)    
+        cookie['username'] = username
+        cookie['username']['expires'] = 3600;
+        cookie['username']['httponly'] = True;
+        # print('except', username)
     
     today = datetime.now()
     this_time = today.strftime('%Y/%m/%d|%H:%M:%S')
     
     # get user details every device
+    # key_value = cookie['user-details'].output(header='Set-Cookie')
+    # cookie.load(key_value)
+    # user1 = cookie['user-details'].value
     user1 = get_cookies_value('user-details')
     user2 = get_user()
+    # print(user1, user2)
     
     if not cek_user(user1, user2):
         username = get_username()
-        cookie['username'] = username
         
     doc = {
         'username': username,
         'time_created': this_time,
-        'user1': user1,
-        'user2': user2,
+        # 'user1': user1,
+        # 'user2': user2,
     }
     
     db.username.insert_one(doc)
@@ -120,6 +128,9 @@ def get_cookies():
 
 @app.route('/send-chat', methods=['POST'])
 def send_chat():
+    # key_value = cookie['username'].output(header='Set-Cookie')
+    # cookie.load(key_value)
+    # sender = cookie['username'].value
     sender = get_cookies_value('username')
     
     today = datetime.now()
@@ -170,16 +181,19 @@ def new_chat():
             id_chat = change['fullDocument']['_id']
             
             try:
+                # key_value = cookie['id_chat'].output(header='Set-Cookie')
+                # cookie.load(key_value)
+                # id_chat_cookie = cookie['id_chat'].value
                 id_chat_cookie = get_cookies_value('id_chat')
-                cookie['id_chat']['expires'] = 60;
-                cookie['id_chat']['httponly'] = True;
             except:
-                id_chat_cookie = 0
+                id_chat_cookie = '0'
                 
             if (cek_id_chat(id_chat, id_chat_cookie)):
                 return jsonify()
                 
             cookie['id_chat'] = id_chat
+            cookie['id_chat']['expires'] = 60;
+            cookie['id_chat']['httponly'] = True;
             
             new_chat = {
                 'sender': sender,
@@ -225,8 +239,8 @@ def checkUsername(username):
 def get_user():
     user_agent = request.headers.get('User-Agent')
     ip_address = request.remote_addr
-    mac_address = request.headers.get('X-Forwarded-For')
-    user_value = f'{user_agent}:{ip_address}:{mac_address}'
+    # mac_address = request.headers.get('X-Forwarded-For')
+    user_value = f'{user_agent}:{ip_address}'
     return user_value
 
 def get_cookies_value(key):
