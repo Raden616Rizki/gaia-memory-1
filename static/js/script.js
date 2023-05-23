@@ -16,9 +16,24 @@ const notMatch = new Audio("../../static/music/not-matched-card.wav");
 const complete = new Audio("../../static/music/complete-game.wav");
 const chatSound = new Audio("../../static/music/chat.mp3")
 
+const animalList = ['anoa', 'bekantan', 'cicak', 'dugong', 'elang', 'flaktivus', 'gajah', 'harimau', 'iguana', 'jaguar', 'kalong', 'merak', 'nyambek', 'orangutan', 'penyu', 'quda', 'rusa', 'sriti', 'tuna', 'vinguin', 'walrus', 'xigung', 'yuyu', 'zebra'];
+
+const wordList = ['bersin', 'berdasi', 'cantik', 'cengeng', 'galau', 'jomblo', 'ketawa', 'lompat', 'lari', 'nangis', 'panik', 'pingsan', 'qlilipan', 'rindu', 'solutip', 'setia', 'skiding', 'terbang', 'uzur', 'xixi', 'nyantai', 'woles'];
+
+// let expirationDate = new Date();
+// expirationDate.setTime(expirationDate.getTime() + (60 * 60 * 1000));
+let username = 'anonim404';
+
 $(document).ready(function() {
     // console.log('start');
     showMenu();
+    if (isCookieEmpty()) {
+        username = getRandomUsername(animalList, wordList);
+        document.cookie = "username=" + username;
+    } else {
+        username = getCookieValue();
+    }
+
     showUsername();
     // scrollToBottom();
     showChat();
@@ -249,13 +264,16 @@ function saveUsername() {
         return alert('Username is Required!!!');
     }
 
+    username = user;
+    document.cookie = "username=" + username;
+
     let form_data = new FormData();
-    form_data.append('username', user);
+    form_data.append('username', username);
     closeUsername()
 
     $.ajax({
         type: 'POST',
-        url: '/set-cookies',
+        url: '/save-username',
         data: form_data,
         contentType: false,
         processData: false,
@@ -268,21 +286,22 @@ function saveUsername() {
 }
 
 function showUsername() {
+    document.getElementById("edit-username").textContent = username;
     // let user;
-    $.ajax({
-        type: 'GET',
-        url: '/get-cookies',
-        data: {},
-        success: function (response) {
-            let cookies = response['cookies'];
-            // console.log(cookies);
-            let usernamePlayer = cookies['username'];
-            // console.log(usernamePlayer);
-            var username = usernamePlayer;
-            // console.log(username);
-            document.getElementById("edit-username").textContent = username;
-        }
-    });
+    // $.ajax({
+    //     type: 'GET',
+    //     url: '/get-cookies',
+    //     data: {},
+    //     success: function (response) {
+    //         let cookies = response['cookies'];
+    //         // console.log(cookies);
+    //         let usernamePlayer = cookies['username'];
+    //         // console.log(usernamePlayer);
+    //         var username = usernamePlayer;
+    //         // console.log(username);
+    //         document.getElementById("edit-username").textContent = username;
+    //     }
+    // });
     // var xhr = new XMLHttpRequest();
     // xhr.open('GET', '/get-cookies', true);
 
@@ -330,6 +349,7 @@ function sendChat() {
 
     // console.log(chat);
     let form_data = new FormData();
+    form_data.append('sender', username);
     form_data.append('chat', chat);
 
     $.ajax({
@@ -355,7 +375,7 @@ function showChat() {
         data: {},
         success: function (response) {
             let chat = response['chat'];
-            let userNow = response['user_now'];
+            // let userNow = response['user_now'];
             // console.log(chat);
             const default_html = `
             <li>
@@ -424,6 +444,33 @@ function scrollToBottom() {
     var list = $('.chat');
 
     chat.scrollTop(list.height());
+}
+
+function getRandomUsername(animal, word) {
+    var randomIndexAnimal = Math.floor(Math.random() * animal.length);
+    var randomIndexWord = Math.floor(Math.random() * word.length);
+    var randomAnimal = animal[randomIndexAnimal];
+    var randomWord = word[randomIndexWord];
+    var min = 1;
+    var max = 16;
+    var randomNumber = Math.random() * (max - min) + min;
+    randomNumber = Math.round(randomNumber);
+    var username = randomAnimal + '_' + randomWord + '_' + randomNumber;
+    // console.log(username);
+    return username;
+}
+
+function isCookieEmpty() {
+    var result = document.cookie.trim() === '';
+    // console.log(result);
+    return result;
+}
+
+function getCookieValue() {
+    var cookie = document.cookie;
+    var cookies = cookie.split('=');
+    var value = cookies[1];
+    return value;
 }
 
 // Timer

@@ -63,7 +63,7 @@ def show_menu():
     menu = list(db.menu.find({}, {'_id': False}))
     return jsonify({'menu': menu})
 
-@app.route('/set-cookies', methods=['POST'])
+@app.route('/save-username', methods=['POST'])
 def set_cookies():
     username = request.form.get('username')
     found = checkUsername(username)
@@ -72,13 +72,19 @@ def set_cookies():
     if (found):
         return jsonify({'message': f'Sorry :( {username} Already used'})
     # print(username)
-    cookie['username'] = username
-    cookie['username']['expires'] = 3600;
-    cookie['username']['httponly'] = True;
-    cookie['user-details'] = get_user()
+    # cookie['username'] = username
+    # cookie['username']['expires'] = 3600;
+    # cookie['username']['httponly'] = True;
+    # cookie['user-details'] = get_user()
     # print(cookie['username'])
+    doc = {
+        'username': username,
+        'time_created': this_time,
+    }
     
-    return jsonify({'message': f'Welcome {username}, The Username lasts about 1 hour, "do you dare to start over?"'})
+    db.username.insert_one(doc)
+    
+    return jsonify({'message': f'Welcome {username}'})
 
 @app.route('/get-cookies', methods=['GET'])
 def get_cookies():
@@ -109,6 +115,7 @@ def get_cookies():
     
     if not cek_user(user1, user2):
         username = get_username()
+        cookie['username'] = username
         
     doc = {
         'username': username,
@@ -131,7 +138,8 @@ def send_chat():
     # key_value = cookie['username'].output(header='Set-Cookie')
     # cookie.load(key_value)
     # sender = cookie['username'].value
-    sender = get_cookies_value('username')
+    # sender = get_cookies_value('username')
+    sender = request.form.get('sender')
     
     today = datetime.now()
     # client_ip = request.remote_addr
