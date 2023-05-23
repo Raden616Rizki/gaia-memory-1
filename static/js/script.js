@@ -22,9 +22,9 @@ $(document).ready(function() {
     showUsername();
     // scrollToBottom();
     showChat();
-    // setInterval(function() {
+    setInterval(function() {
         receiveChat();
-    // }, 2000);
+    }, 18000);
     // setInterval(function() {
     //     showChat();
     // }, 2000);
@@ -373,11 +373,11 @@ function showChat() {
                 let time = chat[i]['time'];
                 let chatContent = chat[i]['chat'];
                 // console.log(userNow, sender)
-                if (userNow != sender) {
-                    $('.chat span').css('border-radius', '4px 0px 4px 4px');
-                } else {
-                    $('.chat span').css('border-radius', '0px 4px 4px 4px');
-                }
+                // if (userNow == sender) {
+                //     $('.chat span').css('border-radius', '4px 0px 4px 4px');
+                // } else {
+                //     $('.chat span').css('border-radius', '0px 4px 4px 4px');
+                // }
 
                 addNewChat(sender, time, chatContent);
             }
@@ -399,6 +399,8 @@ function receiveChat() {
                 var time = new_chat['time'];
                 var chatContent = new_chat['chat'];
                 addNewChat(sender, time, chatContent);
+                scrollToBottom();
+                chatSound.play();
             }
         }
     });

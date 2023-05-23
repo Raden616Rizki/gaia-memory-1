@@ -153,8 +153,8 @@ def send_chat():
 @app.route('/get-chat', methods=['GET'])
 def get_chat():
     chat = list(db.chat.find({}, {'_id': False}))
-    user_now = get_cookies_value('username')
-    return jsonify({'chat': chat, 'user_now': user_now})
+    # user_now = get_cookies_value('username')
+    return jsonify({'chat': chat})
 
 @app.route('/new-chat', methods=['GET'])
 def new_chat():
@@ -168,10 +168,16 @@ def new_chat():
             time = change['fullDocument']['time']
             chat = change['fullDocument']['chat']
             id_chat = change['fullDocument']['_id']
-            id_chat_cookie = get_cookies_value('id_chat')
             
+            try:
+                id_chat_cookie = get_cookies_value('id_chat')
+                cookie['id_chat']['expires'] = 60;
+                cookie['id_chat']['httponly'] = True;
+            except:
+                id_chat_cookie = 0
+                
             if (cek_id_chat(id_chat, id_chat_cookie)):
-                return
+                return jsonify()
                 
             cookie['id_chat'] = id_chat
             
