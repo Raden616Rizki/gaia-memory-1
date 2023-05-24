@@ -66,17 +66,20 @@ def show_menu():
 @app.route('/save-username', methods=['POST'])
 def set_cookies():
     username = request.form.get('username')
-    found = checkUsername(username)
+    # found = checkUsername(username)
     # print(found)
 
-    if (found):
-        return jsonify({'message': f'Sorry :( {username} Already used'})
+    # if (found):
+    #     return jsonify({'status': 'error','message': f'Sorry :( {username} Already used'})
     # print(username)
     # cookie['username'] = username
     # cookie['username']['expires'] = 3600;
     # cookie['username']['httponly'] = True;
     # cookie['user-details'] = get_user()
     # print(cookie['username'])
+    today = datetime.now()
+    this_time = today.strftime('%Y/%m/%d|%H:%M:%S')
+    
     doc = {
         'username': username,
         'time_created': this_time,
@@ -84,7 +87,7 @@ def set_cookies():
     
     db.username.insert_one(doc)
     
-    return jsonify({'message': f'Welcome {username}'})
+    return jsonify({'status': 'OK','message': f'Welcome {username}'})
 
 @app.route('/get-cookies', methods=['GET'])
 def get_cookies():

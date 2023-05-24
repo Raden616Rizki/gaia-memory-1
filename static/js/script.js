@@ -24,6 +24,23 @@ const wordList = ['bersin', 'berdasi', 'cantik', 'cengeng', 'galau', 'jomblo', '
 // expirationDate.setTime(expirationDate.getTime() + (60 * 60 * 1000));
 let username = 'anonim404';
 
+let inputUsername = document.getElementById('username');
+let inputChat = document.getElementById('chat');
+
+inputUsername.addEventListener('keydown', function(event) {
+    // console.log(event);
+    if (event.key === 'Enter') {
+        saveUsername();
+    }
+});
+
+inputChat.addEventListener('keydown', function(event) {
+    // console.log(event);
+    if (event.key === 'Enter') {
+        sendChat();
+    }
+});
+
 $(document).ready(function() {
     // console.log('start');
     showMenu();
