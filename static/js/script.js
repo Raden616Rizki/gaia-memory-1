@@ -54,6 +54,7 @@ $(document).ready(function() {
     showUsername();
     // scrollToBottom();
     showChat();
+    getLeaderboard();
     setInterval(function() {
         receiveChat();
     }, 20000);
@@ -116,6 +117,11 @@ function matchCards(img1, img2) {
             // Stop time
             stopTimer();
             music.pause();
+
+            var time_now = document.getElementById("time");
+            var time = time_now.innerText;
+            // console.log(time);
+            saveLeaderboard(time);
         }
 
         cardOne.removeEventListener('click', flipCard);
@@ -490,6 +496,80 @@ function getCookieValue() {
     return value;
 }
 
+function saveLeaderboard(time) {
+    if (time === '0') {
+        return alert('sorry, something went wrong')
+    }
+
+    let form_data = new FormData();
+    form_data.append('user', username);
+    form_data.append('menu', menu);
+    form_data.append('time', time);
+    form_data.append('flip', flipCount);
+
+    $.ajax({
+        type: 'POST',
+        url: '/save-leaderboard',
+        data: form_data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            getLeaderboard();
+        }
+    });
+}
+
+function getLeaderboard() {
+    $.ajax({
+        type: 'GET',
+        url: '/get-leaderboard',
+        data: {},
+        success: function (response) {
+            var leaderboard = response['leaderboard'];
+            // console.log(leaderboard);
+
+            const default_html = ``;
+            $('#table-leaderboard').html(default_html);
+
+            for (let i = 0; i < leaderboard.length; i++) {
+                var rank = i + 1
+                var user = leaderboard[i]['user'];
+                var menu = leaderboard[i]['menu'];
+                var time = leaderboard[i]['time'];
+                var flip = leaderboard[i]['flip'];
+                var color = '#f8f8f8'
+
+                if (rank == 1) {
+                    // console.log('gold');
+                    color = 'gold';
+                    // $('#table-leaderboard td').css('background-color', 'gold');
+                } else if (rank == 2) {
+                    // console.log('silver');
+                    color = 'silver';
+                    // $('#table-leaderboard td').css('background-color', 'silver');
+                } else if (rank == 3) {
+                    // console.log('bronze');
+                    color = '#CD7F32';
+                    // $('#table-leaderboard td').css('background-color', '#CD7F32');
+                }
+
+                let temp_html = `
+                    <tr>
+                        <td id="rank" style="background: ${color};"><span>${rank}</span></td>
+                        <td id="image-rank" style="background: ${color};"><img src="../static/images/${menu}/img-1.png"></td>
+                        <td id="user-record" style="background: ${color};"><span>${user}</span></td>
+                        <td id="skor" style="background: ${color};"><span>${time}</span></td>
+                        <td id="skor" style="background: ${color};"><span>${flip}</span></td>
+                    </tr>
+                `;
+                // console.log(temp_html);
+
+                $('#table-leaderboard').append(temp_html);
+            }
+        }
+    });
+}
+
 // Timer
 let startTime;
 let timerInterval;
@@ -504,6 +584,7 @@ function startTimer() {
 function stopTimer() {
     isTimeRunning = false;
     clearInterval(timerInterval);
+
 }
 
 function resetTimer() {

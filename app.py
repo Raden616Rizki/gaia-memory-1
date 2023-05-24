@@ -80,12 +80,12 @@ def set_cookies():
     today = datetime.now()
     this_time = today.strftime('%Y/%m/%d|%H:%M:%S')
     
-    doc = {
-        'username': username,
-        'time_created': this_time,
-    }
+    # doc = {
+    #     'username': username,
+    #     'time_created': this_time,
+    # }
     
-    db.username.insert_one(doc)
+    # db.username.insert_one(doc)
     
     return jsonify({'status': 'OK','message': f'Welcome {username}'})
 
@@ -212,6 +212,28 @@ def new_chat():
                 'chat': chat,
             }
             return jsonify({'new_chat': new_chat})
+        
+@app.route('/save-leaderboard', methods=['POST'])
+def save_leaderboard():
+    user = request.form.get('user')
+    menu = request.form.get('menu')
+    time = request.form.get('time')
+    flip = request.form.get('flip')
+   
+    doc = {
+        'user': user,
+        'menu': menu,
+        'time': time,
+        'flip': flip,
+    }
+
+    db.leaderboard.insert_one(doc)
+    return jsonify({'message': 'OK'})
+
+@app.route('/get-leaderboard', methods=['GET'])
+def get_leaderboard():
+    leaderboard = list(db.leaderboard.find({}, {'_id': False}).sort([("time", 1), ("flip", 1)]))
+    return jsonify({'leaderboard': leaderboard})
 
 def get_username():
     animal_list = ['anoa', 'bekantan', 'cicak', 'dugong', 'elang', 'flaktivus', 'gajah', 'harimau', 'iguana', 'jaguar', 'kalong', 'merak', 'nyambek', 'orangutan', 'penyu', 'quda', 'rusa', 'sriti', 'tuna', 'vinguin', 'walrus', 'xigung', 'yuyu', 'zebra']

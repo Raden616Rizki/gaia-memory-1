@@ -66,11 +66,12 @@ body {
     height: 400px;
     width: 400px;
     padding: 25px;
-    background: #9f9f9f;
+    background: #6e6e6e;
     border-radius: 10px;
     overflow: auto;
     align-items: center;
-    justify-self: center;
+    display: flex;
+    justify-content: center;
 }
 
 .left-border {
@@ -394,4 +395,38 @@ th, td {
 #close-form-chat {
     margin-top: 4px;
     display: none;
+}
+
+#table-leaderboard span {
+    font-size: 16px;
+}
+
+#table-leaderboard img {
+    width: 16px;
+    height: 16px;
+    margin-top: 5px;
+    margin-left: 4px
+}
+
+#table-leaderboard td {
+    background-color: #f8f8f8;
+    box-sizing: border-box;
+}
+
+#rank {
+    width: 44px;
+    text-align: center;
+}
+
+#image-rank {
+    width: 44px;
+}
+
+#skor {
+    width: 44px;
+}
+
+#user-record {
+    width: 140px;
+    text-overflow: ellipsis;
 }
