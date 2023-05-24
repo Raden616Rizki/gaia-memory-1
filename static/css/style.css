@@ -69,9 +69,9 @@ body {
     background: #6e6e6e;
     border-radius: 10px;
     overflow: auto;
-    align-items: center;
+    /* align-items: center;
     display: flex;
-    justify-content: center;
+    justify-content: center; */
 }
 
 .left-border {
@@ -426,7 +426,7 @@ th, td {
     width: 44px;
 }
 
-#user-record {
+td#user-record {
     width: 140px;
     text-overflow: ellipsis;
 }
